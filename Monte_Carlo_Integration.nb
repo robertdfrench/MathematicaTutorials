@@ -1,0 +1,260 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 9.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[      7884,        251]
+NotebookOptionsPosition[      6860,        213]
+NotebookOutlinePosition[      7204,        228]
+CellTagsIndexPosition[      7161,        225]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Monte Carlo Integration", "Title",
+ CellChangeTimes->{{3.5994299074315815`*^9, 3.5994299565233154`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell["Setup", "Section",
+ CellChangeTimes->{{3.5994299764928513`*^9, 3.599429982178073*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"numberOfDarts", " ", "=", " ", "10000"}], ";"}]], "Input",
+ CellChangeTimes->{{3.599429985629011*^9, 3.5994299897775383`*^9}, {
+   3.5994332098749385`*^9, 3.5994332102264833`*^9}, 3.5994333720180283`*^9, 
+   3.5994339409302707`*^9, {3.5994339789255953`*^9, 3.599434007845768*^9}, 
+   3.599434400796666*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"shapeFunction", "[", 
+   RowBox[{"x_", ",", "y_"}], "]"}], ":=", 
+  RowBox[{"(", 
+   RowBox[{
+    SqrtBox[
+     RowBox[{
+      SuperscriptBox["x", "2"], "+", 
+      SuperscriptBox["y", "2"]}]], "\[LessEqual]", " ", "1"}], 
+   ")"}]}]], "Input",
+ CellChangeTimes->{{3.5994299953967514`*^9, 3.5994300040893555`*^9}, {
+  3.599430042601246*^9, 3.5994300945693445`*^9}, {3.599430136889219*^9, 
+  3.5994301709465437`*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"xMin", " ", "=", " ", 
+   RowBox[{"-", "1"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"xMax", " ", "=", " ", "1"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"yMin", " ", "=", " ", 
+   RowBox[{"-", "1"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"yMax", " ", "=", " ", "1"}], ";"}]}], "Input",
+ CellChangeTimes->{{3.5994302418135424`*^9, 3.5994302805834656`*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Integration Algorithm", "Section",
+ CellChangeTimes->{{3.5994303138361883`*^9, 3.599430327775958*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"RandomPoint", "[", "]"}], ":=", 
+   RowBox[{"(", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"x", " ", "=", " ", 
+      RowBox[{"RandomReal", "[", 
+       RowBox[{"{", 
+        RowBox[{"xMin", ",", "xMax"}], "}"}], "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"y", " ", "=", " ", 
+      RowBox[{"RandomReal", "[", 
+       RowBox[{"{", 
+        RowBox[{"yMin", ",", "yMax"}], "}"}], "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"x", ",", "y"}], "}"}]}], "\[IndentingNewLine]", ")"}]}], 
+  ";"}]], "Input",
+ CellChangeTimes->{{3.5994307006488075`*^9, 3.599430763094737*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"dartPositions", " ", "=", " ", 
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{"RandomPoint", "[", "]"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"i", ",", "1", ",", "numberOfDarts"}], "}"}]}], "]"}]}], 
+  ";"}]], "Input",
+ CellChangeTimes->{{3.599432193483373*^9, 3.5994322661456003`*^9}, {
+  3.5994323214336205`*^9, 3.5994324056088095`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"checkIfDartLandsInsideShape", "[", 
+    RowBox[{"{", 
+     RowBox[{"x_", ",", "y_"}], "}"}], "]"}], ":=", 
+   RowBox[{"If", "[", 
+    RowBox[{
+     RowBox[{"shapeFunction", "[", 
+      RowBox[{"x", ",", "y"}], "]"}], ",", "1", ",", "0"}], "]"}]}], 
+  ";"}]], "Input",
+ CellChangeTimes->{{3.5994324205672092`*^9, 3.5994324359041567`*^9}, {
+  3.5994325162553596`*^9, 3.5994325749433126`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"tallies", " ", "=", " ", 
+   RowBox[{"Map", "[", 
+    RowBox[{"checkIfDartLandsInsideShape", ",", "dartPositions"}], "]"}]}], 
+  ";"}]], "Input",
+ CellChangeTimes->{{3.599432601952742*^9, 3.59943262721495*^9}}],
+
+Cell[BoxData[
+ RowBox[{"Total", "[", "tallies", "]"}]], "Input",
+ CellChangeTimes->{{3.59943263060338*^9, 3.5994326330296884`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"areaOfDomain", " ", "=", " ", 
+  RowBox[{
+   RowBox[{"(", 
+    RowBox[{"xMax", " ", "-", " ", "xMin"}], ")"}], " ", "*", " ", 
+   RowBox[{"(", 
+    RowBox[{"yMax", " ", "-", " ", "yMin"}], ")"}]}]}]], "Input",
+ CellChangeTimes->{{3.599432643400505*^9, 3.599432665550818*^9}}],
+
+Cell[BoxData[
+ RowBox[{"areaOfShape", " ", "=", " ", 
+  RowBox[{"N", "[", 
+   RowBox[{
+    FractionBox[
+     RowBox[{"Total", "[", "tallies", "]"}], "numberOfDarts"], "*", 
+    "areaOfDomain"}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.59943267352033*^9, 3.5994326774143243`*^9}, {
+  3.5994328049175153`*^9, 3.599432841661681*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Error Analysis", "Section",
+ CellChangeTimes->{{3.599432850527307*^9, 3.5994328599860077`*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"insideDarts", " ", "=", " ", 
+   RowBox[{"{", "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"outsideDarts", " ", "=", " ", 
+   RowBox[{"{", "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"sortDarts", "[", 
+    RowBox[{"{", 
+     RowBox[{"x_", ",", "y_"}], "}"}], "]"}], ":=", " ", 
+   RowBox[{"If", "[", 
+    RowBox[{
+     RowBox[{"shapeFunction", "[", 
+      RowBox[{"x", ",", "y"}], "]"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"AppendTo", "[", 
+      RowBox[{"insideDarts", ",", 
+       RowBox[{"{", 
+        RowBox[{"x", ",", "y"}], "}"}]}], "]"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"AppendTo", "[", 
+      RowBox[{"outsideDarts", ",", 
+       RowBox[{"{", 
+        RowBox[{"x", ",", "y"}], "}"}]}], "]"}]}], "\[IndentingNewLine]", 
+    "]"}]}], ";"}]}], "Input",
+ CellChangeTimes->{{3.5994329895019546`*^9, 3.5994330010474205`*^9}, {
+  3.5994330337090683`*^9, 3.599433035825837*^9}, {3.5994330724444866`*^9, 
+  3.5994331579243417`*^9}, {3.5994336382643366`*^9, 3.5994337167438025`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Map", "[", 
+   RowBox[{"sortDarts", ",", "dartPositions"}], "]"}], ";"}]], "Input",
+ CellChangeTimes->{{3.5994337490624065`*^9, 3.599433759650251*^9}}],
+
+Cell[BoxData[
+ RowBox[{"ListPlot", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"insideDarts", ",", "outsideDarts"}], "}"}], ",", 
+   RowBox[{"PlotLegends", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"\"\<Inside Dart\>\"", ",", "\"\<Outside Dart\>\""}], "}"}]}], 
+   ",", " ", 
+   RowBox[{"AspectRatio", "\[Rule]", "1"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.599433396775672*^9, 3.5994333999135704`*^9}, {
+  3.599433813142544*^9, 3.5994338842620745`*^9}, {3.599433962069955*^9, 
+  3.5994339650463333`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"error", " ", "=", " ", 
+  RowBox[{"Abs", "[", 
+   RowBox[{"\[Pi]", " ", "-", " ", "areaOfShape"}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.599433894470871*^9, 3.599433914365897*^9}}]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{707, 787},
+WindowMargins->{{48, Automatic}, {Automatic, 60}},
+FrontEndVersion->"9.0 for Microsoft Windows (64-bit) (January 25, 2013)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[579, 22, 110, 1, 90, "Title"],
+Cell[CellGroupData[{
+Cell[714, 27, 92, 1, 79, "Section"],
+Cell[809, 30, 341, 6, 31, "Input"],
+Cell[1153, 38, 451, 13, 49, "Input"],
+Cell[1607, 53, 433, 11, 92, "Input"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[2077, 69, 108, 1, 79, "Section"],
+Cell[2188, 72, 669, 19, 112, "Input"],
+Cell[2860, 93, 382, 10, 31, "Input"],
+Cell[3245, 105, 437, 12, 31, "Input"],
+Cell[3685, 119, 245, 6, 31, "Input"],
+Cell[3933, 127, 131, 2, 31, "Input"],
+Cell[4067, 131, 299, 7, 31, "Input"],
+Cell[4369, 140, 331, 8, 46, "Input"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[4737, 153, 101, 1, 79, "Section"],
+Cell[4841, 156, 1078, 27, 132, "Input"],
+Cell[5922, 185, 186, 4, 31, "Input"],
+Cell[6111, 191, 511, 12, 52, "Input"],
+Cell[6625, 205, 207, 4, 31, "Input"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
